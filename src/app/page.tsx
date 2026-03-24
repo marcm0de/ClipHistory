@@ -7,6 +7,8 @@ import Header from "@/components/Header";
 import SearchBar from "@/components/SearchBar";
 import ClipItem from "@/components/ClipItem";
 import Stats from "@/components/Stats";
+import SnippetTemplates from "@/components/SnippetTemplates";
+import FolderBar from "@/components/FolderBar";
 import { Clipboard } from "lucide-react";
 
 export default function Home() {
@@ -15,6 +17,7 @@ export default function Home() {
   const [search, setSearch] = useState("");
   const [searchFocused, setSearchFocused] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [activeFolder, setActiveFolder] = useState("All");
   const listRef = useRef<HTMLDivElement>(null);
 
   // Sort: pinned first, then by date
@@ -23,7 +26,11 @@ export default function Home() {
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   });
 
-  const filtered = sortedClips.filter((c) => {
+  const folderFiltered = activeFolder === "All"
+    ? sortedClips
+    : sortedClips.filter((c) => c.folder === activeFolder);
+
+  const filtered = folderFiltered.filter((c) => {
     if (!search) return true;
     const q = search.toLowerCase();
     return (
@@ -126,6 +133,8 @@ export default function Home() {
           onFocus={() => setSearchFocused(true)}
           onBlur={() => setSearchFocused(false)}
         />
+        <FolderBar activeFolder={activeFolder} onSelect={setActiveFolder} />
+        <SnippetTemplates />
 
         {filtered.length === 0 ? (
           <div className="flex flex-col items-center gap-3 py-16 text-white/30">

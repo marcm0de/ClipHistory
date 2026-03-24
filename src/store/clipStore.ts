@@ -8,20 +8,37 @@ export interface Clip {
   pinned: boolean;
   tags: string[];
   copyCount: number;
+  folder: string; // category/folder name
 }
+
+export interface SnippetTemplate {
+  id: string;
+  name: string;
+  text: string;
+  folder: string;
+}
+
+export const DEFAULT_FOLDERS = ['All', 'Work', 'Personal', 'Code', 'Links', 'Other'] as const;
 
 interface ClipState {
   clips: Clip[];
   darkMode: boolean;
-  addClip: (text: string) => void;
+  templates: SnippetTemplate[];
+  customFolders: string[];
+  addClip: (text: string, folder?: string) => void;
   removeClip: (id: string) => void;
   clearAll: () => void;
   togglePin: (id: string) => void;
   addTag: (id: string, tag: string) => void;
   removeTag: (id: string, tag: string) => void;
+  setClipFolder: (id: string, folder: string) => void;
   incrementCopyCount: (id: string) => void;
   toggleDarkMode: () => void;
   exportJSON: () => string;
+  addTemplate: (name: string, text: string, folder?: string) => void;
+  removeTemplate: (id: string) => void;
+  addCustomFolder: (name: string) => void;
+  removeCustomFolder: (name: string) => void;
 }
 
 const MAX_CLIPS = 100;
@@ -35,8 +52,10 @@ export const useClipStore = create<ClipState>()(
     (set, get) => ({
       clips: [],
       darkMode: true,
+      templates: [],
+      customFolders: [],
 
-      addClip: (text: string) => {
+      addClip: (text: string, folder: string = 'All') => {
         const trimmed = text.trim();
         if (!trimmed) return;
         // Avoid duplicates of the most recent clip
@@ -50,6 +69,7 @@ export const useClipStore = create<ClipState>()(
           pinned: false,
           tags: [],
           copyCount: 0,
+          folder,
         };
 
         set((state) => ({
@@ -89,6 +109,13 @@ export const useClipStore = create<ClipState>()(
           ),
         })),
 
+      setClipFolder: (id: string, folder: string) =>
+        set((state) => ({
+          clips: state.clips.map((c) =>
+            c.id === id ? { ...c, folder } : c
+          ),
+        })),
+
       incrementCopyCount: (id: string) =>
         set((state) => ({
           clips: state.clips.map((c) =>
@@ -103,6 +130,32 @@ export const useClipStore = create<ClipState>()(
         const { clips } = get();
         return JSON.stringify(clips, null, 2);
       },
+
+      addTemplate: (name: string, text: string, folder: string = 'All') => {
+        set((state) => ({
+          templates: [
+            ...state.templates,
+            { id: generateId(), name, text, folder },
+          ],
+        }));
+      },
+
+      removeTemplate: (id: string) =>
+        set((state) => ({
+          templates: state.templates.filter((t) => t.id !== id),
+        })),
+
+      addCustomFolder: (name: string) =>
+        set((state) => ({
+          customFolders: state.customFolders.includes(name)
+            ? state.customFolders
+            : [...state.customFolders, name],
+        })),
+
+      removeCustomFolder: (name: string) =>
+        set((state) => ({
+          customFolders: state.customFolders.filter((f) => f !== name),
+        })),
     }),
     {
       name: "clip-history-storage",
