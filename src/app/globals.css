@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+:root {
+  --accent: #06b6d4;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+::selection {
+  background-color: rgba(6, 182, 212, 0.3);
+}
+
+body {
+  font-family: var(--font-geist-mono), monospace;
+}
+
+.light {
+  --tw-bg-opacity: 1;
+}
+
+.light .text-white {
+  color: #1a1a1a;
+}
+
+.light .text-white\/80 {
+  color: rgba(26, 26, 26, 0.8);
+}
+
+.light .text-white\/50 {
+  color: rgba(26, 26, 26, 0.5);
+}
+
+.light .text-white\/40 {
+  color: rgba(26, 26, 26, 0.4);
+}
+
+.light .text-white\/30 {
+  color: rgba(26, 26, 26, 0.3);
+}
+
+.light .text-white\/70 {
+  color: rgba(26, 26, 26, 0.7);
+}
+
+.light .bg-white\/5 {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.light .bg-white\/10 {
+  background-color: rgba(0, 0, 0, 0.06);
+}
+
+.light .border-white\/10 {
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+.light .border-white\/20 {
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+.light .hover\:bg-white\/10:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+}
+
+.light .hover\:border-white\/20:hover {
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+.light .hover\:text-white:hover {
+  color: #1a1a1a;
+}
