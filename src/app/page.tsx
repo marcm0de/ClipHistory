@@ -9,6 +9,7 @@ import ClipItem from "@/components/ClipItem";
 import Stats from "@/components/Stats";
 import SnippetTemplates from "@/components/SnippetTemplates";
 import FolderBar from "@/components/FolderBar";
+import KeyboardHelp from "@/components/KeyboardHelp";
 import { Clipboard } from "lucide-react";
 
 export default function Home() {
@@ -60,6 +61,11 @@ export default function Home() {
       if (e.key === "/" && !isInput) {
         e.preventDefault();
         setSearchFocused(true);
+        return;
+      }
+
+      if (e.key === "?" && !isInput) {
+        // Let KeyboardHelp handle this via its own state
         return;
       }
 
@@ -133,7 +139,10 @@ export default function Home() {
           onFocus={() => setSearchFocused(true)}
           onBlur={() => setSearchFocused(false)}
         />
-        <FolderBar activeFolder={activeFolder} onSelect={setActiveFolder} />
+        <div className="flex items-center justify-between gap-3">
+          <FolderBar activeFolder={activeFolder} onSelect={setActiveFolder} />
+          <KeyboardHelp />
+        </div>
         <SnippetTemplates />
 
         {filtered.length === 0 ? (
@@ -153,6 +162,7 @@ export default function Home() {
                   key={clip.id}
                   clip={clip}
                   isSelected={i === selectedIndex}
+                  searchQuery={search}
                 />
               ))}
             </AnimatePresence>

@@ -19,9 +19,28 @@ import {
 interface ClipItemProps {
   clip: Clip;
   isSelected: boolean;
+  searchQuery?: string;
 }
 
-export default function ClipItem({ clip, isSelected }: ClipItemProps) {
+function HighlightedText({ text, query }: { text: string; query?: string }) {
+  if (!query || !query.trim()) {
+    return <>{text}</>;
+  }
+  const parts = text.split(new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi'));
+  return (
+    <>
+      {parts.map((part, i) =>
+        part.toLowerCase() === query.toLowerCase() ? (
+          <mark key={i} className="bg-yellow-400/30 text-yellow-200 rounded px-0.5">{part}</mark>
+        ) : (
+          <span key={i}>{part}</span>
+        )
+      )}
+    </>
+  );
+}
+
+export default function ClipItem({ clip, isSelected, searchQuery }: ClipItemProps) {
   const [expanded, setExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
   const [showTagInput, setShowTagInput] = useState(false);
@@ -121,7 +140,7 @@ export default function ClipItem({ clip, isSelected }: ClipItemProps) {
         className="cursor-pointer whitespace-pre-wrap break-words font-mono text-sm text-white/80"
         onClick={() => (isLong ? setExpanded(!expanded) : handleCopy())}
       >
-        {displayText}
+        <HighlightedText text={displayText} query={searchQuery} />
       </pre>
 
       {isLong && (
