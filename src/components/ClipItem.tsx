@@ -76,11 +76,11 @@ export default function ClipItem({ clip, isSelected, searchQuery }: ClipItemProp
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, x: -100 }}
-      className={`group relative rounded-lg border p-3 transition-all ${
+      className={`group relative rounded-xl border p-3.5 transition-all duration-200 ${
         isSelected
-          ? "border-cyan-500 bg-cyan-500/10"
-          : "border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/[0.07]"
-      } ${clip.pinned ? "border-l-2 border-l-cyan-500" : ""}`}
+          ? "border-cyan-500 bg-cyan-500/10 shadow-lg shadow-cyan-500/10 ring-1 ring-cyan-500/20"
+          : "border-white/[0.08] bg-white/[0.03] hover:border-white/20 hover:bg-white/[0.06] hover:shadow-md hover:shadow-black/10"
+      } ${clip.pinned ? "border-l-2 border-l-cyan-400 bg-cyan-500/[0.04]" : ""}`}
     >
       {/* Header row */}
       <div className="mb-1.5 flex items-center justify-between text-xs text-white/40">
